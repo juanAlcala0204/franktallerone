@@ -2,7 +2,7 @@ import React from 'react'
 import NavbarMovementList from './NavbarMovementList'
 import List from './List'
 
-const MovementList = ({modalFunction: chooseModalOpen}) => {
+const MovementList = ({modalFunction: chooseModalOpen, dataMovements, dataTabulator,setDataTabulator}) => {
     return (
         <div>
             <div className="card">
@@ -19,7 +19,7 @@ const MovementList = ({modalFunction: chooseModalOpen}) => {
                         <br/>
                         <div className="row">
                             <div className="col-md-12">
-                                <List modalFunction={chooseModalOpen}/>
+                                <List modalFunction={chooseModalOpen} dataMovements={dataMovements} dataTabulator={dataTabulator} setDataTabulator={setDataTabulator}/>
 
                             </div>
                         </div>

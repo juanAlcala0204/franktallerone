@@ -27,4 +27,14 @@ const functionCreateActionButton = (cell, formatterParams, onRendered) => { //pl
     }
 };
 
-export default functionCreateActionButton;
+const formatNumber = (number) => {
+    return new Intl.NumberFormat( "ES-CO",  {
+        style:'currency',
+        currency: 'COP'
+    }).format(number)
+}
+
+export { 
+    functionCreateActionButton,
+    formatNumber
+};

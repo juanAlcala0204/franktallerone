@@ -16,10 +16,11 @@ const CustomModal = ({ modalEstado, setModalEstado }) => {
     const handleInputChange = (event) => {
         setDatos({
             ...datos,
-            [event.target.name] : event.target.value,
+            [event.target.name]: event.target.value,
         })
     }
 
+    const { typeMovement = false } = modalEstado.infoModal.datoExtra;
     return (
 
         <Modal isOpen={modalEstado.state}>
@@ -31,7 +32,9 @@ const CustomModal = ({ modalEstado, setModalEstado }) => {
                     modalEstado.type === 'Delete' && (<div><h3>Eliminar Movimiento</h3></div>)
                 }
                 {
-                    modalEstado.type === 'Insert' && (<div><h3>Insertar Movimiento</h3></div>)
+                    modalEstado.type === 'Insert' && modalEstado.infoModal.error
+                        ? (<div><h3>Error</h3></div>)
+                        : modalEstado.infoModal.success && (<div><h3>Registro Exitoso</h3></div>)
                 }
 
             </ModalHeader>
@@ -80,19 +83,34 @@ const CustomModal = ({ modalEstado, setModalEstado }) => {
                     )
                 }
                 {
-                    modalEstado.type === 'Insert' && (
-                        <div><h3>Se guardo correctamente</h3></div>
-                    )
+                    modalEstado.type === 'Insert' && modalEstado.infoModal.error
+                        ? (
+                            <div><hr /><h5>No cuentas con suficiente saldo para realizar este movimiento.</h5><hr /></div>
+                        ) : (
+                            <div><hr /><h5>Registro exitoso {
+                                typeMovement === 'G' && typeMovement
+                                    ? (<h5> del movimiento tipo Gasto.</h5>)
+                                    : typeMovement === 'I' && typeMovement
+                                    && (<h5> del movimiento tipo Ingreso.</h5>)}</h5><hr /></div>
+                        )
                 }
 
             </ModalBody>
             <ModalFooter>
                 {
                     modalEstado.type !== 'Edit' && (
-                        <button className="btn btn-danger" onClick={() => setModalEstado(false)}>Cancelar</button>
+                        <button className="btn btn-danger" onClick={() => setModalEstado({
+                            state: false,
+                            type: '',
+                            infoModal: {
+                                error: false,
+                                success: false,
+                                datoExtra: {}
+                            }
+                        })}>Cancelar</button>
                     )
                 }
-                
+
             </ModalFooter>
         </Modal>
 

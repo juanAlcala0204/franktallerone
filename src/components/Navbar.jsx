@@ -3,7 +3,7 @@ import BalanceFields from './BalanceFields'
 import '../assets/css/Navbar.css';
 
 
-const Navbar = () => {
+const Navbar = ({ balance, setBalance, dataMovements, finalBalance, setFinalBalance, balanceChange }) => {
     return (
         <Fragment>
             <nav className="navbar navbar-light bg-dark justify-content-between">
@@ -16,7 +16,12 @@ const Navbar = () => {
                     </div>
                 </div>
                 <form className="form-inline">
-                    <BalanceFields />
+                    <BalanceFields balance={balance}
+                        setBalance={setBalance}
+                        dataMovements={dataMovements}
+                        finalBalance={finalBalance}
+                        setFinalBalance={setFinalBalance}
+                        balanceChange={balanceChange} />
                 </form>
             </nav>
         </Fragment>
