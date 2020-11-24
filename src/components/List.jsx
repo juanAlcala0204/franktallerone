@@ -4,7 +4,7 @@ import 'react-tabulator/lib/css/tabulator.min.css'; // theme
 import { ReactTabulator } from 'react-tabulator'; // for React 15.x, use import { React15Tabulator }
 import functionCreateActionButton from '../assets/js/globals'
 
-const List = () => {
+const List = ({modalFunction: chooseModalOpen}) => {
     const [data, setData] = useState([])
 
     const getData = async () => {
@@ -23,6 +23,10 @@ const List = () => {
     }, [])
     
     const cellClickExample = () => {
+        const tabledata = [
+            { id: 1, nameMovement: "Salario Freelance", quantity: 2000}
+        ];
+        setData(tabledata);
         console.log('di click');
     }
 
@@ -33,16 +37,16 @@ const List = () => {
             },
             cellClick: function (e, cell) {
                 let row = cell.getRow();
-                cellClickExample();
+                chooseModalOpen({}, 'Edit');
             },
         },
         {
-            title: "Edit", field: "id", width: 100, formatter: functionCreateActionButton, align: "center", formatterParams: {
+            title: "Eliminar", field: "id", width: 100, formatter: functionCreateActionButton, align: "center", formatterParams: {
                 type: 'Delete',
             },
             cellClick: function (e, cell) {
                 let row = cell.getRow();
-              
+                chooseModalOpen({}, 'Delete');
             },
         },
         {

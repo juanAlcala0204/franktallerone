@@ -7,7 +7,7 @@ const functionCreateActionButton = (cell, formatterParams, onRendered) => { //pl
     try {
         switch (formatterParams['type']) {
             case 'Edit':
-                htmlButton = '<button class="btn btn-primary btn-sm text-right" style="color: white;" data-toggle="modal" data-target="#modal-lg"><i class="fa fa-edit"></i></button>';
+                htmlButton = '<button class="btn btn-primary btn-sm text-right"><i class="fa fa-edit"></i></button>';
                 return htmlButton;
             case 'Info':
                 htmlButton = '<button class="btn btn-info btn-sm text-right Icon-lg"  data-toggle="modal" data-target="#modal-info"><i class="fa fa-cart-plus"></i></button>';

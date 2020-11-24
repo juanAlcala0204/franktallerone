@@ -2,7 +2,7 @@ import React from 'react'
 import NavbarMovementList from './NavbarMovementList'
 import List from './List'
 
-const MovementList = () => {
+const MovementList = ({modalFunction: chooseModalOpen}) => {
     return (
         <div>
             <div className="card">
@@ -19,7 +19,7 @@ const MovementList = () => {
                         <br/>
                         <div className="row">
                             <div className="col-md-12">
-                                <List />
+                                <List modalFunction={chooseModalOpen}/>
 
                             </div>
                         </div>
