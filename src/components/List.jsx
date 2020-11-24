@@ -66,6 +66,7 @@ const List = ({modalFunction: chooseModalOpen, dataMovements, dataTabulator,setD
         {
             title: "Tipo Movimiento",
             field: "inputTypeMovement",
+            visible:false
         }
     ];
     
