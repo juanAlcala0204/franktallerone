@@ -1,24 +1,52 @@
-import React, { Fragment, useState } from 'react';
+import React, { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap'
+import { useForm } from 'react-hook-form'
 
-const CustomModal = ({ modalEstado, setModalEstado }) => {
-    console.log(modalEstado);
-    const [datos, setDatos] = useState({
-        txtFieldName: '',
-        txtFieldQuantity: ''
+const CustomModal = ({ modalEstado, setModalEstado, currentUser, finalBalance, updateUser , setFinalBalance}) => {
+
+    const { register, errors, handleSubmit, setValue, reset } = useForm({
+        defaultValues: { inputTypeMovement: '1', txtFieldQuantity: "2", txtFieldName: "asdsad" }
     });
 
-    const sendData = (event) => {
-        event.preventDefault();
+    setValue('txtFieldName', currentUser.txtFieldName);
+
+    setValue('txtFieldQuantity', currentUser.txtFieldQuantity);
+
+    setValue('inputTypeMovement', currentUser.inputTypeMovement);
+
+    useEffect(() => {
+        const newData = {
+            inputTypeMovement: currentUser.inputTypeMovement, txtFieldQuantity: currentUser.txtFieldQuantity, txtFieldName: currentUser.txtFieldName
+        }
+        reset(newData);
+
+    }, [reset, currentUser]);
+    
+    const logicGiveFinalBalanceWithNewMovement = (oldFinalBalance, data) => {
+        return data.inputTypeMovement !== 'I' ? oldFinalBalance - parseInt(data.txtFieldQuantity) : oldFinalBalance + parseInt(data.txtFieldQuantity)
+    }
+    
+    const onSubmit = (data, e) => {
+        e.preventDefault();
+        data.id = currentUser.id;
+        updateUser(currentUser.id, data);
+        setFinalBalance(logicGiveFinalBalanceWithNewMovement(finalBalance, data));
+        setModalEstado({
+            state: false,
+            type: '',
+            infoModal: {
+                error: false,
+                success: false,
+                datoExtra: {}
+            }
+        })
+        //addMovement(data);
     }
 
-    const handleInputChange = (event) => {
-        setDatos({
-            ...datos,
-            [event.target.name]: event.target.value,
-        })
-    }
+    const selectMovementIngreso = 'I';
+    const selectMovementGasto = 'G';
+
 
     const { typeMovement = false } = modalEstado.infoModal.datoExtra;
     return (
@@ -42,30 +70,49 @@ const CustomModal = ({ modalEstado, setModalEstado }) => {
                 {
                     modalEstado.type === 'Edit' && (
                         <div>
-
-                            <form onSubmit={sendData}>
+                            <form onSubmit={handleSubmit(onSubmit)}>
                                 <div className="form-row">
                                     <div className="form-group col-md-12">
                                         <label htmlFor="inputTypeMovement">Tipo Movimiento:</label>
-                                        <select id="inputTypeMovement" className="form-control">
-                                            <option >Elige...</option>
-                                            <option>...</option>
+                                        <select name="inputTypeMovement" className="form-control" ref={
+                                            register()
+                                        }>
+                                            <option value={selectMovementIngreso}>Ingreso</option>
+                                            <option value={selectMovementGasto}>Gasto</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="txtFieldName">Nombre:</label>
-                                    <input type="text" className="form-control" name="txtFieldName" onChange={handleInputChange} />
+                                    <input type="text" className="form-control" name="txtFieldName" ref={
+                                        register()
+                                    } />
+                                </div>
+                                <div>
+                                    {errors?.txtFieldName?.message}
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="txtFieldQuantity">Cantidad:</label>
-                                    <input type="text" className="form-control" name="txtFieldQuantity" onChange={handleInputChange} />
+                                    <input type="text" className="form-control" name="txtFieldQuantity" ref={
+                                        register()
+                                    } />
+                                </div>
+                                <div>
+                                    {errors?.txtFieldQuantity?.message}
                                 </div>
                                 <br />
                                 <hr />
                                 <div className="row">
                                     <div className="col-md-4">
-                                        <button className="btn btn-danger" onClick={() => setModalEstado(false)}>Cancelar</button>
+                                        <button className="btn btn-danger" onClick={() => setModalEstado({
+                                            state: false,
+                                            type: '',
+                                            infoModal: {
+                                                error: false,
+                                                success: false,
+                                                datoExtra: {}
+                                            }
+                                        })}>Cancelar</button>
                                     </div>
                                     <div className="col-md-3"></div>
                                     <div className="col-md-5">
@@ -86,7 +133,7 @@ const CustomModal = ({ modalEstado, setModalEstado }) => {
                     modalEstado.type === 'Insert' && modalEstado.infoModal.error
                         ? (
                             <div><hr /><h5>No cuentas con suficiente saldo para realizar este movimiento.</h5><hr /></div>
-                        ) : (
+                        ) : modalEstado.type === 'Insert' && (
                             <div><hr /><h5>Registro exitoso {
                                 typeMovement === 'G' && typeMovement
                                     ? (<h5> del movimiento tipo Gasto.</h5>)

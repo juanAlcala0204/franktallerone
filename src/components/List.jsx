@@ -4,8 +4,7 @@ import 'react-tabulator/lib/css/tabulator.min.css'; // theme
 import { ReactTabulator } from 'react-tabulator'; // for React 15.x, use import { React15Tabulator }
 import {functionCreateActionButton} from '../assets/js/globals'
 
-const List = ({modalFunction: chooseModalOpen, dataMovements, dataTabulator,setDataTabulator}) => {
-    console.log(dataMovements);
+const List = ({modalFunction: chooseModalOpen, dataMovements, dataTabulator,setDataTabulator, editRow, deleteMovement}) => {
 
     const getData = async () => {
         const tabledata = [
@@ -24,7 +23,6 @@ const List = ({modalFunction: chooseModalOpen, dataMovements, dataTabulator,setD
             { id: 1, nameMovement: "Salario Freelance", quantity: 2000}
         ];
         setDataTabulator(tabledata);
-        console.log('di click');
     }
     const functionRowQuantity = () => {
 
@@ -32,20 +30,23 @@ const List = ({modalFunction: chooseModalOpen, dataMovements, dataTabulator,setD
 
     const columns = [
         {
-            title: "Edit", field: "id", width: 100, formatter: functionCreateActionButton, align: "center", formatterParams: {
+            title: "Edit", field: "id", width: 100, formatter: functionCreateActionButton, formatterParams: {
                 type: 'Edit',
             },
             cellClick: function (e, cell) {
                 let row = cell.getRow();
-                chooseModalOpen({}, 'Edit');
+                editRow(row.getData());
+                chooseModalOpen({ error: false, success: true, datoExtra: { typeMovement: 'I' } }, 'Edit');
             },
         },
         {
-            title: "Eliminar", field: "id", width: 100, formatter: functionCreateActionButton, align: "center", formatterParams: {
+            title: "Eliminar", field: "id", width: 100, formatter: functionCreateActionButton, formatterParams: {
                 type: 'Delete',
             },
             cellClick: function (e, cell) {
                 let row = cell.getRow();
+                let data = row.getData();
+                deleteMovement(data);
                 chooseModalOpen({}, 'Delete');
             },
         },

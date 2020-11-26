@@ -32,7 +32,6 @@ const Register = ({ modalFunction: chooseModalOpen, setDataTabulator, setDataMov
     }
 
     const onSubmit = (data, e) => {
-        console.log(data);
         addMovement(data);
         e.target.reset();
     }
@@ -71,14 +70,12 @@ const Register = ({ modalFunction: chooseModalOpen, setDataTabulator, setDataMov
                         </div>
                         <div className="form-group">
                             <label htmlFor="txtFieldQuantity">Cantidad:</label>
-                            <input type="text" className="form-control" name="txtFieldQuantity" ref={
-                                register({
-                                    required: { value: true, message: 'Campo Requerido' }
-                                })
+                            <input type="number" className="form-control" name="txtFieldQuantity" ref={
+                                register({ min: 1})
                             } />
                         </div>
                         <div>
-                            {errors?.txtFieldQuantity?.message}
+                            {errors.txtFieldQuantity && 'Debes poner una cantidad mayor a 0'}
                         </div>
                         <br />
                         <hr />

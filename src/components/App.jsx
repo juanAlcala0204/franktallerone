@@ -5,7 +5,7 @@ import MovementList from './MovementList'
 import CustomModal from './CustomModal'
 import '../assets/css/App.css'
 import { v4 as uuidv4 } from 'uuid';
-import {formatNumber} from '../assets/js/globals'
+import { formatNumber } from '../assets/js/globals'
 
 
 const App = () => {
@@ -20,8 +20,62 @@ const App = () => {
     }
   });
 
+  const movementsDataInitial = [
+    { id: uuidv4(), txtFieldName: 'Example Movement', txtFieldQuantity: '0', inputTypeMovement: 'I' },
+  ]
+
+  const [currentUser, setCurrentUser] = useState({
+    id: null,
+    txtFieldName: '',
+    txtFieldQuantity: '',
+    inputTypeMovement: ''
+  });
+
+  const [dataMovements, setDataMovements] = useState(movementsDataInitial)
+  const [dataTabulator, setDataTabulator] = useState([])
+  const [balance, setBalance] = useState(0);
+  const [finalBalance, setFinalBalance] = useState(0);
+
+
+  const editRow = (movement) => {
+    const newMovement = {
+      id: movement.id,
+      txtFieldName: movement.txtFieldName,
+      txtFieldQuantity: movement.txtFieldQuantity,
+      inputTypeMovement: movement.inputTypeMovement
+    }
+    setCurrentUser({
+      ...newMovement
+    })
+  }
+  const logicForLoadNewMovementUpdate = (id, updateUser) => {
+    const dataMovementTemp = dataMovements.map(movement => ((movement.id === id) ? updateUser : movement));
+
+    setDataTabulator(dataMovementTemp);
+    return dataMovementTemp;
+  }
+  const updateUser = (id, updateUser) => {
+    const dataUpdate = logicForLoadNewMovementUpdate(id, updateUser);
+    setDataMovements(dataUpdate)
+  }
+
+  const logicGiveFinalBalanceWithDeleteMovement = (data) => {
+
+    let calculateOfTheMovements = 0;
+    for (let elemento of data) {
+      calculateOfTheMovements = elemento.inputTypeMovement !== 'I' ? calculateOfTheMovements - parseInt(elemento.txtFieldQuantity) : calculateOfTheMovements + parseInt(elemento.txtFieldQuantity);
+    }
+    return calculateOfTheMovements;
+  }
+
+  const deleteMovement = (data) => {
+    const dataMovementsFiltred = dataMovements.filter(movement => movement.id !== data.id);
+    setDataMovements(dataMovementsFiltred);
+    setDataTabulator(dataMovementsFiltred);
+    setFinalBalance(logicGiveFinalBalanceWithDeleteMovement(dataMovementsFiltred));
+  }
+
   const chooseModalOpen = (infoData, typeModal) => {
-    console.log(typeModal, "LO que le lega a choose");
     switch (typeModal) {
       case 'Edit':
         setModalEstado({
@@ -49,7 +103,7 @@ const App = () => {
         setModalEstado({
           state: true,
           type: 'Insert',
-          infoModal: {...infoData}
+          infoModal: { ...infoData }
         });
       default:
         console.log('fallo switch');
@@ -57,14 +111,6 @@ const App = () => {
     }
   }
 
-  const movementsDataInitial = [
-    { id: uuidv4(), txtFieldName: 'Test Movimiento', txtFieldQuantity: '3000', inputTypeMovement: 'I' }
-  ]
-
-  const [dataMovements, setDataMovements] = useState(movementsDataInitial)
-  const [dataTabulator, setDataTabulator] = useState([])
-  const [balance, setBalance] = useState(0);
-  const [finalBalance, setFinalBalance] = useState(0);
 
 
   const balanceChange = (event) => {
@@ -76,7 +122,7 @@ const App = () => {
       calculateOfTheMovements = elemento.inputTypeMovement !== 'I' ? calculateOfTheMovements - parseInt(elemento.txtFieldQuantity) : calculateOfTheMovements + parseInt(elemento.txtFieldQuantity);
     }
     setFinalBalance(parseInt(event.target.value) + calculateOfTheMovements);
-    
+
   }
 
   return (
@@ -98,18 +144,18 @@ const App = () => {
               setDataTabulator={setDataTabulator}
               setDataMovements={setDataMovements}
               dataMovements={dataMovements}
-              finalBalance = {finalBalance}
+              finalBalance={finalBalance}
               setFinalBalance={setFinalBalance} />
           </div>
           <div className="col-md-1"></div>
           <div className="col-md-7">
-            <MovementList modalFunction={chooseModalOpen} dataMovements={dataMovements} dataTabulator={dataTabulator} setDataTabulator={setDataTabulator} />
+            <MovementList modalFunction={chooseModalOpen} dataMovements={dataMovements} dataTabulator={dataTabulator} setDataTabulator={setDataTabulator} editRow={editRow} deleteMovement={deleteMovement} />
 
           </div>
         </div>
       </section>
 
-      <CustomModal modalEstado={modalEstado} setModalEstado={setModalEstado} />
+      <CustomModal modalEstado={modalEstado} setModalEstado={setModalEstado} currentUser={currentUser} finalBalance={finalBalance} updateUser={updateUser} setFinalBalance={setFinalBalance} />
     </div>
   );
 }
