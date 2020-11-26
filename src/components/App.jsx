@@ -21,7 +21,7 @@ const App = () => {
   });
 
   const movementsDataInitial = [
-    { id: uuidv4(), txtFieldName: 'Example Movement', txtFieldQuantity: '0', inputTypeMovement: 'I' },
+    
   ]
 
   const [currentUser, setCurrentUser] = useState({
