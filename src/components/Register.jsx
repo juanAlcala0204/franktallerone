@@ -71,7 +71,7 @@ const Register = ({ modalFunction: chooseModalOpen, setDataTabulator, setDataMov
                         <div className="form-group">
                             <label htmlFor="txtFieldQuantity">Cantidad:</label>
                             <input type="number" className="form-control" name="txtFieldQuantity" ref={
-                                register({ min: 1})
+                                register({ required: true, min: 1})
                             } />
                         </div>
                         <div>

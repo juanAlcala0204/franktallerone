@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap'
 import { useForm } from 'react-hook-form'
 
-const CustomModal = ({ modalEstado, setModalEstado, currentUser, finalBalance, updateUser , setFinalBalance}) => {
+const CustomModal = ({ modalEstado, setModalEstado, currentUser, finalBalance, updateUser , setFinalBalance, balance}) => {
 
     const { register, errors, handleSubmit, setValue, reset } = useForm({
         defaultValues: { inputTypeMovement: '1', txtFieldQuantity: "2", txtFieldName: "asdsad" }
@@ -23,15 +23,23 @@ const CustomModal = ({ modalEstado, setModalEstado, currentUser, finalBalance, u
 
     }, [reset, currentUser]);
     
-    const logicGiveFinalBalanceWithNewMovement = (oldFinalBalance, data) => {
-        return data.inputTypeMovement !== 'I' ? oldFinalBalance - parseInt(data.txtFieldQuantity) : oldFinalBalance + parseInt(data.txtFieldQuantity)
+    const logicGiveFinalBalanceWithNewMovement = (balance, dataUpdate) => {
+        console.log(balance);
+        debugger;
+        let calculateOfTheMovements = 0;
+        for (let elemento of dataUpdate) {
+          calculateOfTheMovements = elemento.inputTypeMovement !== 'I' ? calculateOfTheMovements - parseInt(elemento.txtFieldQuantity) : calculateOfTheMovements + parseInt(elemento.txtFieldQuantity);
+        }
+
+        return parseInt(balance) + calculateOfTheMovements  
+        
     }
     
     const onSubmit = (data, e) => {
         e.preventDefault();
         data.id = currentUser.id;
-        updateUser(currentUser.id, data);
-        setFinalBalance(logicGiveFinalBalanceWithNewMovement(finalBalance, data));
+        const dataUpdate = updateUser(currentUser.id, data);
+        setFinalBalance(logicGiveFinalBalanceWithNewMovement(balance, dataUpdate));
         setModalEstado({
             state: false,
             type: '',

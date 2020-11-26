@@ -21,7 +21,7 @@ const App = () => {
   });
 
   const movementsDataInitial = [
-    
+
   ]
 
   const [currentUser, setCurrentUser] = useState({
@@ -57,15 +57,16 @@ const App = () => {
   const updateUser = (id, updateUser) => {
     const dataUpdate = logicForLoadNewMovementUpdate(id, updateUser);
     setDataMovements(dataUpdate)
+    return dataUpdate;
   }
 
   const logicGiveFinalBalanceWithDeleteMovement = (data) => {
-
     let calculateOfTheMovements = 0;
     for (let elemento of data) {
       calculateOfTheMovements = elemento.inputTypeMovement !== 'I' ? calculateOfTheMovements - parseInt(elemento.txtFieldQuantity) : calculateOfTheMovements + parseInt(elemento.txtFieldQuantity);
     }
-    return calculateOfTheMovements;
+
+    return parseInt(balance) + calculateOfTheMovements
   }
 
   const deleteMovement = (data) => {
@@ -121,6 +122,7 @@ const App = () => {
     for (let elemento of dataMovements) {
       calculateOfTheMovements = elemento.inputTypeMovement !== 'I' ? calculateOfTheMovements - parseInt(elemento.txtFieldQuantity) : calculateOfTheMovements + parseInt(elemento.txtFieldQuantity);
     }
+    setBalance(event.target.value);
     setFinalBalance(parseInt(event.target.value) + calculateOfTheMovements);
 
   }
@@ -155,7 +157,7 @@ const App = () => {
         </div>
       </section>
 
-      <CustomModal modalEstado={modalEstado} setModalEstado={setModalEstado} currentUser={currentUser} finalBalance={finalBalance} updateUser={updateUser} setFinalBalance={setFinalBalance} />
+      <CustomModal modalEstado={modalEstado} setModalEstado={setModalEstado} currentUser={currentUser} finalBalance={finalBalance} updateUser={updateUser} setFinalBalance={setFinalBalance} balance={balance} />
     </div>
   );
 }
